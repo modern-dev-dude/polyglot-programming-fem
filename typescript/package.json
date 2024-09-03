@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/submarine.ts",
+    "start": "ts-node src/fissures.ts",
     "test": "vitest"
   },
   "keywords": [],
