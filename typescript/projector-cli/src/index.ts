@@ -1,1 +1,3 @@
-console.log("hello");
+import getOpts from "./opts";
+
+console.log(getOpts());

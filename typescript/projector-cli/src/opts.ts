@@ -1,4 +1,4 @@
-import path from "node:path";
+import { cwd } from "node:process";
 import cli from "command-line-args";
 
 export type Opts = {
@@ -13,7 +13,8 @@ export default function getOps(): Opts {
   return cli([
     {
       name: "args",
-      defaultValue: true,
+      defaultOption: true,
+      multiple: true,
       type: String,
     },
     {
@@ -25,7 +26,7 @@ export default function getOps(): Opts {
       name: "pwd",
       alias: "p",
       type: String,
-      defaultOption: path.cwd(),
+      defaultValue: cwd(),
     },
   ]) as Opts;
 }
