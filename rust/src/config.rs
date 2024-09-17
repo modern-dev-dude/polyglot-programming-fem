@@ -9,7 +9,7 @@ pub struct Config {
     pub pwd: PathBuf,
     pub config: PathBuf,
 }
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Operation {
     Print(Option<String>),
     Add(String, String),
@@ -42,7 +42,7 @@ impl TryFrom<Vec<String>> for Operation {
         }
 
         if term == "rm" {
-            if value.len() != 1 {
+            if value.len() != 2 {
                 let err = anyhow!("operation rm expects 1 argument but got {}", value.len());
                 return Err(err);
             }
@@ -81,7 +81,7 @@ fn get_config(config: Option<PathBuf>) -> Result<PathBuf> {
         return Ok(v);
     }
 
-    let loc = std::env::var("XDG_CONFIG_HOME").context("unable to get XDG_CONFIG_HOME")?;
+    let loc = std::env::var("HOME").context("unable to get XDG_CONFIG_HOME")?;
     let mut loc = PathBuf::from(loc);
 
     loc.push("projector");
@@ -96,4 +96,65 @@ fn get_pwd(pwd: Option<PathBuf>) -> Result<PathBuf> {
     }
 
     return Ok(std::env::current_dir().context("error getting current directory")?);
+}
+
+#[cfg(test)]
+mod test {
+    use anyhow::Result;
+
+    use crate::{config::Operation, opts::Opts};
+
+    use super::Config;
+
+    #[test]
+    fn test_print_all() -> Result<()> {
+        let config: Config = Opts {
+            args: vec![],
+            pwd: None,
+            config: None,
+        }
+        .try_into()?;
+
+        assert_eq!(config.operation, Operation::Print(None));
+        return Ok(());
+    }
+
+    #[test]
+    fn test_print_key() -> Result<()> {
+        let config: Config = Opts {
+            args: vec!["foo".to_string()],
+            pwd: None,
+            config: None,
+        }
+        .try_into()?;
+
+        assert_eq!(config.operation, Operation::Print(Some("foo".into())));
+        return Ok(());
+    }
+
+    #[test]
+    fn test_add() -> Result<()> {
+        let config: Config = Opts {
+            args: vec!["add".into(), "foo".to_string(), "bar".into()],
+            pwd: None,
+            config: None,
+        }
+        .try_into()?;
+
+        assert_eq!(config.operation, Operation::Add("foo".into(), "bar".into()));
+        return Ok(());
+    }
+
+    #[test]
+    fn test_rm() -> Result<()> {
+        let config: Config = Opts {
+            args: vec!["rm".into(), "foo".to_string()],
+            pwd: None,
+            config: None,
+        }
+        .try_into()?;
+
+        assert_eq!(config.operation, Operation::Remove("foo".into()));
+        return Ok(());
+    }
 }
