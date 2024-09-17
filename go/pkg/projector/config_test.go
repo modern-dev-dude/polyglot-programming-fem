@@ -31,6 +31,7 @@ func testConfig(t *testing.T, args []string, expectedArgs []string, operation pr
 
 	}
 }
+
 func TestConfigPrint(t *testing.T) {
 	args := []string{""}
 	testConfig(t, args, args, projector.Print)
