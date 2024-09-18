@@ -29,7 +29,7 @@ func getData() *projector.Data {
 func getProjector(pwd string, data *projector.Data) *projector.Projector {
 	return projector.CreateProjector(
 		&projector.Config{
-			Ags:       []string{},
+			Args:      []string{},
 			Operation: projector.Print,
 			Pwd:       pwd,
 			Config:    "Hello, mdd",

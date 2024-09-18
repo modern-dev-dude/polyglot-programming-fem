@@ -15,7 +15,7 @@ const (
 )
 
 type Config struct {
-	Ags       []string
+	Args      []string
 	Operation Operation
 	Config    string
 	Pwd       string
@@ -107,6 +107,6 @@ func NewConfig(opts *Opts) (*Config, error) {
 		Pwd:       pwd,
 		Config:    config,
 		Operation: getOperation(opts),
-		Ags:       args,
+		Args:      args,
 	}, nil
 }
